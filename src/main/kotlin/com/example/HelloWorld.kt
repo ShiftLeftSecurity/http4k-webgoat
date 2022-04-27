@@ -14,7 +14,15 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.lang.StringBuilder
 
+import org.ktorm.database.Database
+import org.ktorm.database.iterator
+import org.ktorm.support.sqlite.SQLiteDialect
+
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
+
+val dbFileName = "http4k-webgoat.db"
 
 fun parseParams(name: String, msg: String): Map<String, String?> {
     val checkedName = name.takeUnless { it -> it.contains('\\') }?.ifBlank { "default_name" }
@@ -22,7 +30,7 @@ fun parseParams(name: String, msg: String): Map<String, String?> {
     return mapOf("parsed_name" to checkedName, "parsed_msg" to checkedMsg)
 }
 
-fun HelloWorld(): HttpHandler {
+fun HelloWorld(db: Database): HttpHandler {
     return routes(
         "/ping" bind GET to { Response(OK).body("ok") },
         "/exec" bind GET to { req ->
@@ -51,12 +59,36 @@ fun HelloWorld(): HttpHandler {
             File(fullPath).writeText(finalMsg)
             Response(OK).body("Did write message `" + finalMsg + "` to file at `" + fullPath + "`")
           }
+        },
+        "add_user" bind GET to { req ->
+            val username = req.query("username")
+            val password = req.query("password")
+            val out = db.useConnection {
+                val sql = "INSERT INTO user (username, password) VALUES ('$username', '$password');"
+                val stmt = it.createStatement()
+                stmt.execute(sql)
+                username
+            }
+            Response(OK).body("Did insert new user `" + out + "`.")
         }
     )
 }
 
 fun main() {
+    Files.deleteIfExists(Paths.get(dbFileName)) // remove db file on each application start
+
+    val db = Database.connect(url = "jdbc:sqlite:$dbFileName", dialect = SQLiteDialect())
+    db.useConnection { conn ->
+        val createTableSQL = "CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY, username TEXT, password TEXT)"
+        val createStmt = conn.createStatement()
+        createStmt.execute(createTableSQL)
+
+        val insertUserSQL = "INSERT INTO user (id, username, password) VALUES (1, 'admin', 'admin')"
+        val insertUserStmt = conn.createStatement()
+        insertUserStmt.execute(insertUserSQL)
+    }
+
     val port = 8080
     println("Serving content on port " + port.toString() + ".")
-    HelloWorld().asServer(SunHttp(port)).start()
+    HelloWorld(db).asServer(SunHttp(port)).start()
 }
