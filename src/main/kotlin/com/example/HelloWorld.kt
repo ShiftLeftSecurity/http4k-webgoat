@@ -3,8 +3,9 @@ package com.example
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
 import org.http4k.core.Response
-import org.http4k.core.Request
+import org.http4k.core.Status.Companion.FORBIDDEN
 import org.http4k.core.Status.Companion.OK
+import org.http4k.core.Status.Companion.TEMPORARY_REDIRECT
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.server.SunHttp
@@ -15,12 +16,19 @@ import java.io.InputStreamReader
 import java.lang.StringBuilder
 
 import org.ktorm.database.Database
-import org.ktorm.database.iterator
 import org.ktorm.support.sqlite.SQLiteDialect
 
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
+
+
+class Config {
+    companion object {
+        val adminUsername = "barnabyjack"
+        val adminPassword = "RIPquaeShueth8ohf5Aebi4RIP"
+    }
+}
 
 val dbFileName = "http4k-webgoat.db"
 
@@ -32,6 +40,18 @@ fun parseParams(name: String, msg: String): Map<String, String?> {
 
 fun HelloWorld(db: Database): HttpHandler {
     return routes(
+        "get_passwd" bind GET to { req ->
+            val username = req.query("username")
+            val password = req.query("password")
+            if (username == Config.adminUsername && password == Config.adminPassword) {
+                val contents = File("/etc/passwd").readText()
+                Response(OK).body(contents)
+            } else {
+                // vulnerability: Sensitive Data Leak
+                println("unsucessfull login as " + username + " | " + password)
+                Response(FORBIDDEN)
+            }
+        },
         "/ping" bind GET to { Response(OK).body("ok") },
         "/exec" bind GET to { req ->
             val cmd = req.query("cmd")
