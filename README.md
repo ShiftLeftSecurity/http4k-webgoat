@@ -30,7 +30,7 @@ curl -v http://localhost:8080/
 
 The project contains the following vulnerabilities:
 
-- Remove Code Execution
+- Remote Code Execution
 - Directory Traversal
 - SQL Injection
 
