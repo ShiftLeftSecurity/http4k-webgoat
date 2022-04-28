@@ -21,13 +21,17 @@ test {
     useJUnitPlatform()
 }
 
-def ktormVersion = '3.2.0'
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin_version}"
     implementation platform("org.http4k:http4k-bom:${http4k_version}")
     implementation "org.http4k:http4k-core"
 
+    def kotlinxHtmlVersion = "0.7.5"
+    implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:$kotlinxHtmlVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-html:$kotlinxHtmlVersion")
+
+    def ktormVersion = '3.2.0'
     implementation "org.ktorm:ktorm-core:${ktormVersion}"
     implementation "org.ktorm:ktorm-support-sqlite:${ktormVersion}"
     implementation "org.xerial:sqlite-jdbc:3.36.0"

@@ -34,6 +34,8 @@ The project contains the following vulnerabilities:
 - Directory Traversal
 - SQL Injection
 - Open Redirect
+- Sensitive Data Leak
+- XSS
 
 ```
 $ grep vulnerability . -R -n | grep -v README
@@ -42,5 +44,6 @@ $ grep vulnerability . -R -n | grep -v README
 ./src/main/kotlin/com/example/HelloWorld.kt:60:            // vulnerability: Directory Traversal
 ./src/main/kotlin/com/example/HelloWorld.kt:69:                // vulnerability: SQL Injection
 ./src/main/kotlin/com/example/HelloWorld.kt:79:            // vulnerability: Open Redirect
+./src/main/kotlin/com/example/HelloWorld.kt:113:                    // vulnerability: XSS
 ```
 
