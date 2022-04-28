@@ -37,6 +37,7 @@ The project contains the following vulnerabilities:
 
 ```
 $ grep vulnerability . -R -n | grep -v README
+./src/main/kotlin/com/example/HelloWorld.kt:50:                // vulnerability: Sensitive Data Leak
 ./src/main/kotlin/com/example/HelloWorld.kt:41:              // vulnerability: Remote Code Execution
 ./src/main/kotlin/com/example/HelloWorld.kt:60:            // vulnerability: Directory Traversal
 ./src/main/kotlin/com/example/HelloWorld.kt:69:                // vulnerability: SQL Injection
