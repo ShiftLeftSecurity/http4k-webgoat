@@ -33,11 +33,13 @@ The project contains the following vulnerabilities:
 - Remote Code Execution
 - Directory Traversal
 - SQL Injection
+- Open Redirect
 
 ```
 $ grep vulnerability . -R -n | grep -v README
 ./src/main/kotlin/com/example/HelloWorld.kt:41:              // vulnerability: Remote Code Execution
 ./src/main/kotlin/com/example/HelloWorld.kt:60:            // vulnerability: Directory Traversal
 ./src/main/kotlin/com/example/HelloWorld.kt:69:                // vulnerability: SQL Injection
+./src/main/kotlin/com/example/HelloWorld.kt:79:            // vulnerability: Open Redirect
 ```
 

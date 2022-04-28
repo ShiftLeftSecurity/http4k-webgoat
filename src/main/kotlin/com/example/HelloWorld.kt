@@ -73,6 +73,11 @@ fun HelloWorld(db: Database): HttpHandler {
                 username
             }
             Response(OK).body("Did insert new user `" + out + "`.")
+        },
+        "forgotten_debug_route" bind GET to { req ->
+            val url = req.query("url")
+            // vulnerability: Open Redirect
+            Response(TEMPORARY_REDIRECT).header("Location", url)
         }
     )
 }
