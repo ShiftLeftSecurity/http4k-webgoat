@@ -11,9 +11,13 @@ import org.http4k.routing.routes
 import org.http4k.server.SunHttp
 import org.http4k.server.asServer
 
+import kotlinx.html.*
+import kotlinx.html.dom.*
+import kotlinx.html.stream.appendHTML
+import org.http4k.routing.body
+
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.lang.StringBuilder
 
 import org.ktorm.database.Database
 import org.ktorm.support.sqlite.SQLiteDialect
@@ -21,6 +25,7 @@ import org.ktorm.support.sqlite.SQLiteDialect
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
+import kotlin.text.StringBuilder
 
 
 class Config {
@@ -98,7 +103,27 @@ fun HelloWorld(db: Database): HttpHandler {
             val url = req.query("url")
             // vulnerability: Open Redirect
             Response(TEMPORARY_REDIRECT).header("Location", url)
-        }
+        },
+        "render_html" bind GET to { req ->
+            val name = req.query("name")
+            val out = StringBuilder()
+
+            out.appendHTML().html {
+                body {
+                    // vulnerability: XSS
+                    unsafe {
+                        + "<h1>Hello there, `$name`!</h1>"
+                    }
+                    div {
+                        a("https://shiftleft.io") {
+                            target = ATarget.blank
+                            + "Hitting F12 is a crime, clicking this link is not"
+                        }
+                    }
+                }
+            }
+            Response(OK).body(out.toString())
+        },
     )
 }
 
