@@ -1,6 +1,6 @@
 # http4k-webgoat
 
-flask-webgoat is a deliberately-vulnerable application written with the `http4k` web framework.
+http4k-webgoat is a deliberately-vulnerable application written with the `http4k` web framework.
 
 ## Build/test locally
 
@@ -28,4 +28,16 @@ curl -v http://localhost:8080/
 
 ## Vulnerabilities
 
-// TODO: list them out
+The project contains the following vulnerabilities:
+
+- Remote Code Execution
+- Directory Traversal
+- SQL Injection
+
+```
+$ grep vulnerability . -R -n | grep -v README
+./src/main/kotlin/com/example/HelloWorld.kt:41:              // vulnerability: Remote Code Execution
+./src/main/kotlin/com/example/HelloWorld.kt:60:            // vulnerability: Directory Traversal
+./src/main/kotlin/com/example/HelloWorld.kt:69:                // vulnerability: SQL Injection
+```
+

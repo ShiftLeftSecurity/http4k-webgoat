@@ -38,6 +38,7 @@ fun HelloWorld(db: Database): HttpHandler {
             if (cmd == "nop") {
               Response(OK).body("NOP")
             } else {
+              // vulnerability: Remote Code Execution
               val proc = Runtime.getRuntime().exec(cmd)
               val lineReader = BufferedReader(InputStreamReader(proc.getInputStream()));
               val output = StringBuilder()
@@ -56,6 +57,7 @@ fun HelloWorld(db: Database): HttpHandler {
             val parsedParams = parseParams(name, msg)
             val fullPath = "/tmp/http4kexample/" + parsedParams["parsed_name"]
             val finalMsg = "MESSAGE: " + parsedParams["parsed_msg"]
+            // vulnerability: Directory Traversal
             File(fullPath).writeText(finalMsg)
             Response(OK).body("Did write message `" + finalMsg + "` to file at `" + fullPath + "`")
           }
@@ -64,6 +66,7 @@ fun HelloWorld(db: Database): HttpHandler {
             val username = req.query("username")
             val password = req.query("password")
             val out = db.useConnection {
+                // vulnerability: SQL Injection
                 val sql = "INSERT INTO user (username, password) VALUES ('$username', '$password');"
                 val stmt = it.createStatement()
                 stmt.execute(sql)
