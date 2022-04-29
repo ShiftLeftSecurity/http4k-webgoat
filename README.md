@@ -2,20 +2,20 @@
 
 http4k-webgoat is a deliberately-vulnerable application written with the `http4k` web framework.
 
-## Build/test locally
+## Run locally
+
+Install gradle, then use the `run` task of the project to serve HTTP:
 
 ```shell script
-./gradlew test distZip
-unzip build/distributions/Example.zip
-Example/bin/Example
+./gradlew run
 ```
 
 then:
 ```shell script
-curl -v http://localhost:8080/
+curl -v http://localhost:8080/ping
 ```
 
-## Build/run in Docker
+## Run in Docker
 
 ```shell script
 ./build_and_run.sh
@@ -23,7 +23,7 @@ curl -v http://localhost:8080/
 
 then:
 ```shell script
-curl -v http://localhost:8080/
+curl -v http://localhost:8080/ping
 ```
 
 ## Vulnerabilities
