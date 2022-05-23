@@ -45,5 +45,6 @@ $ grep vulnerability . -R -n | grep -v README
 ./src/main/kotlin/com/example/HelloWorld.kt:69:                // vulnerability: SQL Injection
 ./src/main/kotlin/com/example/HelloWorld.kt:79:            // vulnerability: Open Redirect
 ./src/main/kotlin/com/example/HelloWorld.kt:113:                    // vulnerability: XSS
+./build.gradle:49:         // vulnerability: Hardcoded Credentials
 ```
 
