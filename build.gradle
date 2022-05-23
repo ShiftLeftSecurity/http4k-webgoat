@@ -41,3 +41,16 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "org.junit.jupiter:junit-jupiter-engine"
 }
+
+allprojects {
+    repositories {
+      maven {
+         url = "https://no.such.url/gradle/libs-releases/"
+         // vulnerability: Hardcoded Credentials
+         credentials {
+              username = "barnabyjack"
+              password = "PhitiTeeLiethi0eephi"
+         }
+      }
+    }
+}
