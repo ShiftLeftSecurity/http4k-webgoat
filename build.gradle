@@ -17,6 +17,19 @@ apply plugin: 'application'
 
 mainClassName = "com.example.HelloWorldKt"
 
+
+jar {
+  duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+
+    manifest {
+        attributes "Main-Class": "com.example.HelloWorldKt"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
 test {
     useJUnitPlatform()
 }
